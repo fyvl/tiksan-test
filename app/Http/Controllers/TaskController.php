@@ -10,7 +10,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         try {
-            $tasks = Task::paginate(5);
+            $tasks = Task::orderBy('updated_at', 'desc')->paginate(5);
             return response()->json($tasks);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while fetching tasks'], 500);

@@ -15,7 +15,9 @@
     const fetchTasks = async (page = 1) => {
         try {
             const response = await axios.get(`/api/tasks?page=${page}`);
-            tasks.value = response.data.data;
+            tasks.value = response.data.data.sort((a, b) => {
+                return new Date(b.updated_at) - new Date(a.updated_at);
+            });
             currentPage.value = response.data.current_page;
             lastPage.value = response.data.last_page;
             console.log(tasks.value);
@@ -41,6 +43,7 @@
             try {
                 const response = await axios.post('/api/tasks', task);
                 tasks.value.push(response.data);
+                fetchTasks();
             } catch (error) {
                 console.error('Ошибка при добавлении задачи:', error);
             }

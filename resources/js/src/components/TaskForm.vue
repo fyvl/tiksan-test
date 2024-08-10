@@ -22,11 +22,17 @@
 
     const saveTask = () => {
         emit('save', form.value);
+        clearForm();
     };
 
     const cancel = () => {
         emit('cancel');
+        clearForm();
     };
+
+    const clearForm = () => {
+        form.value = { title: '', description: '' };
+    }
 </script>
 
 <template>
