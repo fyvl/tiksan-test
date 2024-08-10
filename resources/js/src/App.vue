@@ -1,16 +1,10 @@
 <script setup>
+	import TaskList from './components/TaskList.vue';
 </script>
 
 <template>
-	<div class="container">
-		Hello world!
-	</div>
+	<TaskList/>
 </template>
 
 <style lang="scss" scoped>
-	.container {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
 </style>
