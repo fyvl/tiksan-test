@@ -3,10 +3,11 @@
     import axios from 'axios';
     import TaskItem from './TaskItem.vue';
     import TaskForm from './TaskForm.vue';
-    import EditTaskModal from './EditTaskModal.vue';
+    import { PlusIcon } from '@heroicons/vue/24/outline';
     
     const tasks = ref([]);
     const editingTask = ref(null);
+    const showAddModal = ref(false);
 
     const fetchTasks = async () => {
         try {
@@ -17,13 +18,34 @@
         }
     };
 
-    const addTask = async (title) => {
-        try {
-            const response = await axios.post('/api/tasks', { title });
-            tasks.value.push(response.data);
-        } catch (error) {
-            console.error('Ошибка при добавлении задачи:', error);
+    const openAddModal = () => {
+        showAddModal.value = true;
+    };
+
+    const handleSave = async (task) => {
+        if (task.id) {
+            try {
+                const response = await axios.put(`/api/tasks/${task.id}`, task);
+                const index = tasks.value.findIndex(t => t.id === task.id);
+                tasks.value[index] = response.data;
+            } catch (error) {
+                console.error('Ошибка при сохранении изменений:', error);
+            }
+        } else {
+            try {
+                const response = await axios.post('/api/tasks', task);
+                tasks.value.push(response.data);
+            } catch (error) {
+                console.error('Ошибка при добавлении задачи:', error);
+            }
         }
+        showAddModal.value = false;
+        editingTask.value = null;
+    };
+
+    const handleCancel = () => {
+        showAddModal.value = false;
+        editingTask.value = null;
     };
 
     const deleteTask = async (id) => {
@@ -50,21 +72,7 @@
 
     const editTask = (task) => {
         editingTask.value = { ...task };
-    };
-
-    const saveEdit = async (updatedTask) => {
-        try {
-            const response = await axios.put(`/api/tasks/${updatedTask.id}`, updatedTask);
-            const index = tasks.value.findIndex(t => t.id === updatedTask.id);
-            tasks.value[index] = response.data;
-            editingTask.value = null;
-        } catch (error) {
-            console.error('Ошибка при сохранении изменений:', error);
-        }
-    };
-
-    const cancelEdit = () => {
-        editingTask.value = null;
+        showAddModal.value = true;
     };
 
     onMounted(fetchTasks);
@@ -74,7 +82,17 @@
     <div class="container mx-auto p-4">
         <h1 class="text-2xl font-bold mb-4">Список задач</h1>
 
-        <TaskForm @add-task="addTask" />
+        <button @click="openAddModal" class="flex items-center bg-green-500 text-white px-4 py-2 rounded mb-4">
+            <PlusIcon class="w-6 h-6 mr-1"/>
+            <span>Добавить задачу</span>
+        </button>
+
+        <TaskForm 
+            :showModal="showAddModal || editingTask"
+            :task="editingTask"
+            @save="handleSave"
+            @cancel="handleCancel"
+        />
 
         <ul>
             <TaskItem 
@@ -86,12 +104,5 @@
                 @delete="deleteTask"
             />
         </ul>
-
-        <EditTaskModal 
-            v-if="editingTask" 
-            :task="editingTask" 
-            @save="saveEdit"
-            @cancel="cancelEdit"
-        />
     </div>
 </template>

@@ -12,6 +12,7 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "@heroicons/vue": "^2.1.5",
         "@vitejs/plugin-vue": "^5.1.2",
         "autoprefixer": "^10.4.20",
         "postcss": "^8.4.41",
