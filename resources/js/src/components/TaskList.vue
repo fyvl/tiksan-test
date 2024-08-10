@@ -79,30 +79,32 @@
 </script>
 
 <template>
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4">Список задач</h1>
+    <div class="flex items-start justify-center min-h-screen pt-16 bg-gray-100">
+        <div class="w-full max-w-xl p-4 bg-white shadow-md rounded">
+            <h1 class="text-2xl font-bold mb-4 text-center">Список задач</h1>
 
-        <button @click="openAddModal" class="flex items-center bg-green-500 text-white px-4 py-2 rounded mb-4">
-            <PlusIcon class="w-6 h-6 mr-1"/>
-            <span>Добавить задачу</span>
-        </button>
+            <button @click="openAddModal" class="flex items-center bg-green-500 text-white px-4 py-2 rounded mb-4 mx-auto">
+                <PlusIcon class="w-6 h-6 mr-1"/>
+                <span>Добавить задачу</span>
+            </button>
 
-        <TaskForm 
-            :showModal="showAddModal || editingTask"
-            :task="editingTask"
-            @save="handleSave"
-            @cancel="handleCancel"
-        />
-
-        <ul>
-            <TaskItem 
-                v-for="task in tasks" 
-                :key="task.id" 
-                :task="task"
-                @toggle="toggleTask"
-                @edit="editTask"
-                @delete="deleteTask"
+            <TaskForm 
+                :showModal="showAddModal || editingTask"
+                :task="editingTask"
+                @save="handleSave"
+                @cancel="handleCancel"
             />
-        </ul>
+
+            <ul>
+                <TaskItem 
+                    v-for="task in tasks" 
+                    :key="task.id" 
+                    :task="task"
+                    @toggle="toggleTask"
+                    @edit="editTask"
+                    @delete="deleteTask"
+                />
+            </ul>
+        </div>
     </div>
 </template>
