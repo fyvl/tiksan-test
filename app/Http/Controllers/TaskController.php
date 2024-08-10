@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $tasks = Task::all();
+            $tasks = Task::paginate(5);
             return response()->json($tasks);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while fetching tasks'], 500);
